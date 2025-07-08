@@ -4,6 +4,7 @@
 node xxx
 
 textlint
+renovate
 
 ブランチ作成→PR
 デバイス
