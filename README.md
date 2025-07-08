@@ -5,4 +5,7 @@ node xxx
 
 textlint
 
-ブランチ作成
+ブランチ作成→PR
+デバイス
+書き込みスマホ、PC
+lint PC
