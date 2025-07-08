@@ -12,3 +12,4 @@ renovate
 lint PC
 ファイル名
 本_202507.md
+github actionsでファイル名形式、lint
