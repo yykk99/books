@@ -1,0 +1,29 @@
+name: Validate Markdown Filenames
+on:
+  pull_request:
+    paths:
+      - 'work/**/*.md'
+      - 'private/**/*.md'
+jobs:
+  valid-markdown-filenames:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: valid-markdown-filenames
+        run: |
+          echo "Validate Markdown Filenames..."
+
+          invalid_files=$(find work private -type f -name '*.md' | while read file; do
+              filename=$(basename "$file")
+              if ! echo "$filename" | grep -qE '^.+_[0-9]{6}\.md$'; then
+              echo "$file"
+              fi
+          done)
+
+          if [ -n "$invalid_files" ]; then
+              echo "❌ Invalid markdown filenames found:"
+              echo "$invalid_files"
+              exit 1
+          fi
+
+          echo "✅ All markdown filenames are valid."
