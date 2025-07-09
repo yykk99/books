@@ -1,14 +1,15 @@
-運用ルール
+### ルール
 
-node xxx
+- 本を読んで重要だなと思ったところを記載する
+- 仕事関係は/workに、個人的なものは/privateに置く
+- ファイル名は「本の名前\_yyyymm.md」にする
+- 見出しは#3つで統一する
+- Node23.xを使用する
+  - Textlintで文章のリントをする
+  - Prettierで全ファイルformatする
+    - `npm run format`
+  - ライブラリはRenovateで自動管理する
 
-textlint
-renovate
-
-ブランチ作成 →PR
-デバイス
-書き込みスマホ、PC
-lint PC
-ファイル名
-本\_202507.md
-github actions でファイル名形式、lint
+<!-- TODO -->
+<!-- Github actionsでファイル名チェックする -->
+<!-- pre commitでフォーマットする -->
