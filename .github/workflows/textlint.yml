@@ -27,19 +27,17 @@ jobs:
 
       - name: Run textlint and capture result
         run: |
-          rm -f .textlint.log .textlint-exitcode
-          if ! npx textlint work/**/*.md private/**/*.md > .textlint.log 2>&1; then
-            echo "1" > .textlint-exitcode
+          if ! npx textlint $MARKDOWN_PATHS > .textlint.log 2>&1; then
+            echo "Textlint failed"
+            echo "failed=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Comment on PR if lint fails
-        if: always()
+        if: steps.textlint.outputs.failed == 'true'
         run: |
-          if [ -s .textlint.log ] && [ -f .textlint-exitcode ]; then
-            gh pr comment "$PR_URL" --body "$(cat .textlint.log)"
-            echo "Textlint failed. Exiting with error."
-            exit 1
-          fi
+          gh pr comment "$PR_URL" --body "$(cat .textlint.log)"
+          exit 1
         env:
+          MARKDOWN_PATHS: 'work/**/*.md private/**/*.md'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}
