@@ -4,11 +4,15 @@ on:
     paths:
       - 'work/**/*.md'
       - 'private/**/*.md'
+permissions:
+  pull-requests: write
 
 jobs:
   textlint:
     name: TextLint Check
     runs-on: ubuntu-latest
+    env:
+      MARKDOWN_PATHS: 'work/**/*.md private/**/*.md'
 
     steps:
       - name: Checkout code
@@ -23,16 +27,19 @@ jobs:
         run: |
           npm install
 
-      - name: Run textlint
+      - name: Run textlint and capture result
+        id: textlint
         run: |
-          npx textlint work/**/*.md private/**/*.md >> .textlint.log || true
+          if ! npx textlint $MARKDOWN_PATHS > .textlint.log 2>&1; then
+            echo "Textlint failed"
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
 
       - name: Comment on PR if lint fails
-        if: failure()
+        if: steps.textlint.outputs.failed == 'true'
         run: |
-          if [ -s .textlint.log ]; then
-            gh pr comment "$PR_URL" --body "$(cat .textlint.log)" --edit-last
-          fi
+          gh pr comment "$PR_URL" --body "$(cat .textlint.log)"
+          exit 1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}

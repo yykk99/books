@@ -4,8 +4,8 @@
   "description": "",
   "main": "",
   "scripts": {
-    "format": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "format": "prettier --write ."
   },
   "repository": {
     "type": "git",
