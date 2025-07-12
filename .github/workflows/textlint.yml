@@ -27,6 +27,7 @@ jobs:
 
       - name: Run textlint and capture result
         run: |
+          rm -f .textlint.log .textlint-exitcode
           npx textlint work/**/*.md private/**/*.md > .textlint.log 2>&1 || echo $? > .textlint-exitcode
 
       - name: Comment on PR if lint fails
