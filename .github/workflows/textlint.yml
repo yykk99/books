@@ -31,7 +31,7 @@ jobs:
         if: always()
         run: |
           if [ -s .textlint.log ] && [ -f .textlint-exitcode ]; then
-            gh pr comment "$PR_URL" --body "$(cat .textlint.log)" --edit-last
+            gh pr comment "$PR_URL" --body "$(cat .textlint.log)"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
