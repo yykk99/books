@@ -23,14 +23,14 @@ jobs:
         run: |
           npm install
 
-      - name: Run textlint
+      - name: Run textlint and capture result
         run: |
-          npx textlint work/**/*.md private/**/*.md >> .textlint.log || true
+          npx textlint work/**/*.md private/**/*.md > .textlint.log 2>&1 || echo $? > .textlint-exitcode
 
       - name: Comment on PR if lint fails
-        if: failure()
+        if: always()
         run: |
-          if [ -s .textlint.log ]; then
+          if [ -s .textlint.log ] && [ -f .textlint-exitcode ]; then
             gh pr comment "$PR_URL" --body "$(cat .textlint.log)" --edit-last
           fi
         env:
