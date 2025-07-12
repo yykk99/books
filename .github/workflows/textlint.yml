@@ -4,6 +4,8 @@ on:
     paths:
       - 'work/**/*.md'
       - 'private/**/*.md'
+permissions:
+  pull-requests: write
 
 jobs:
   textlint:
