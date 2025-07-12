@@ -1,0 +1,38 @@
+name: Run Textlint
+on:
+  pull_request:
+    paths:
+      - 'work/**/*.md'
+      - 'private/**/*.md'
+
+jobs:
+  textlint:
+    name: TextLint Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js from .nvmrc
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Run textlint
+        run: |
+          npx textlint work/**/*.md private/**/*.md >> .textlint.log || true
+
+      - name: Comment on PR if lint fails
+        if: failure()
+        run: |
+          if [ -s .textlint.log ]; then
+            gh pr comment "$PR_URL" --body "$(cat .textlint.log)" --edit-last
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
